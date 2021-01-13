@@ -1,0 +1,15 @@
+node_modules/
+dist/
+build/
+
+# misc
+.DS_Store
+
+# debug
+npm-debug.log*
+
+# local env files
+.env
+
+.bash_history
+.vscode
