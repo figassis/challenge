@@ -43,7 +43,7 @@ const defineUser = require("./models/user");
 class Squire {
   constructor() {
     return (async () => {
-      this.store = await initialize(true);
+      this.store = await initialize(process.env.RESET === "true");
       return this;
     })();
   }
