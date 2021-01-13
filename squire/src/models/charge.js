@@ -1,13 +1,17 @@
-import { DataTypes, Sequelize } from "sequelize";
+const { DataTypes } = require("sequelize");
 
-export function definePayment(store: Sequelize) {
+module.exports = (store) => {
   store.define(
-    "Payment",
+    "Charge",
     {
       uuid: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
+      },
+      description: {
+        type: DataTypes.STRING,
+        allowNull: false,
       },
       errorDescription: {
         type: DataTypes.STRING,
@@ -15,8 +19,14 @@ export function definePayment(store: Sequelize) {
         allowNull: false,
       },
       status: {
-        type: DataTypes.ENUM("pending", "completed", "refunded", "error"),
-        defaultValue: "pending",
+        type: DataTypes.ENUM(
+          "unpaid",
+          "paid",
+          "refunded",
+          "cancelled",
+          "error"
+        ),
+        defaultValue: "unpaid",
         allowNull: false,
       },
       currency: {
@@ -28,6 +38,13 @@ export function definePayment(store: Sequelize) {
         type: DataTypes.DECIMAL(10, 2),
         defaultValue: 0.0,
         allowNull: false,
+        validate: { min: 0.0 },
+      },
+      tipAmount: {
+        type: DataTypes.DECIMAL(10, 2),
+        defaultValue: 0.0,
+        allowNull: false,
+        validate: { min: 0.0 },
       },
     },
     {
@@ -35,4 +52,4 @@ export function definePayment(store: Sequelize) {
       // indexes: [{ fields: ["status"] }],
     }
   );
-}
+};

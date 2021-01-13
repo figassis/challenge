@@ -1,6 +1,6 @@
-import { DataTypes, Sequelize } from "sequelize";
+const { DataTypes } = require("sequelize");
 
-export function defineAccount(store: Sequelize) {
+module.exports = (store) => {
   store.define(
     "Account",
     {
@@ -14,8 +14,8 @@ export function defineAccount(store: Sequelize) {
           "merchant",
           "checking",
           "fee",
-          "withdrawals", //money goes here when users withdraw. This is to mock removing money from system
-          "deposits", //money comes from here when suers deposit. this si to mock adding money to system
+          // "withdrawals", //money goes here when users withdraw. This is to mock removing money from system
+          // "deposits", //money comes from here when suers deposit. this si to mock adding money to system
           "suspense" //when payments are stored before being distributed to the shop, barber and fee accounts
         ),
         defaultValue: "checking",
@@ -47,4 +47,4 @@ export function defineAccount(store: Sequelize) {
       // indexes: [{ fields: ["status"] }, { fields: ["type"] }],
     }
   );
-}
+};

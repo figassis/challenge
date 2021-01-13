@@ -1,6 +1,6 @@
-import { DataTypes, Sequelize } from "sequelize";
+const { DataTypes } = require("sequelize");
 
-export function defineTransaction(store: Sequelize) {
+module.exports = (store) => {
   store.define(
     "Transaction",
     {
@@ -12,12 +12,13 @@ export function defineTransaction(store: Sequelize) {
       type: {
         type: DataTypes.ENUM(
           "payment", //when customer pays a charge
+          "payout", //when merchant receives money
           "deposit", //when a user adds money to their account from outside
           "withdrawal", //when a user withdraws money form their account
           "transfer", // transfers between accounts of the same owner
-          "refund",
-          "tip",
-          "fee"
+          "refund"
+          // "tip",
+          // "fee"
         ),
         defaultValue: "payment",
         allowNull: false,
@@ -40,11 +41,19 @@ export function defineTransaction(store: Sequelize) {
         type: DataTypes.DECIMAL(10, 2),
         defaultValue: 0.0,
         allowNull: false,
+        validate: { min: 0.0 },
       },
       feeAmount: {
         type: DataTypes.DECIMAL(10, 2),
         defaultValue: 0.0,
         allowNull: false,
+        validate: { min: 0.0 },
+      },
+      tipAmount: {
+        type: DataTypes.DECIMAL(10, 2),
+        defaultValue: 0.0,
+        allowNull: false,
+        validate: { min: 0.0 },
       },
     },
     {
@@ -52,4 +61,4 @@ export function defineTransaction(store: Sequelize) {
       // indexes: [ { fields: ["SourceAccountUuid"] }, { fields: ["DestinationAccountUuid"] }, { fields: ["status"] }],
     }
   );
-}
+};

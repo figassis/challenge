@@ -1,6 +1,6 @@
-import { Sequelize } from "sequelize/types";
+const { DataTypes } = require("sequelize");
 
-export function defineAssociations(store: Sequelize) {
+module.exports = (store) => {
   const {
     Account,
     User,
@@ -16,16 +16,16 @@ export function defineAssociations(store: Sequelize) {
   User.hasOne(Account, { foreignKey: { allowNull: true } });
 
   // Merchant Accociations
-  Merchant.hasOne(Account, { as: "Account", foreignKey: { allowNull: true } }); //Account.merchantId
+  Merchant.hasOne(Account, { foreignKey: { allowNull: true } }); //Account.merchantId
 
   // Transaction associations
   Transaction.belongsTo(Account, {
     as: "SourceAccount",
-    foreignKey: { allowNull: false },
+    foreignKey: { allowNull: true },
   });
   Transaction.belongsTo(Account, {
     as: "DestinationAccount",
-    foreignKey: { allowNull: false },
+    foreignKey: { allowNull: true },
   });
 
   // Charge associations
@@ -48,4 +48,4 @@ export function defineAssociations(store: Sequelize) {
   Refund.hasOne(Transaction, { foreignKey: { allowNull: true } });
 
   Payment.hasOne(Transaction, { foreignKey: { allowNull: true } });
-}
+};

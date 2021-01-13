@@ -1,8 +1,8 @@
-import { DataTypes, Sequelize } from "sequelize";
+const { DataTypes } = require("sequelize");
 
-export function defineRefund(store: Sequelize) {
+module.exports = (store) => {
   store.define(
-    "Refund",
+    "Payment",
     {
       uuid: {
         type: DataTypes.UUID,
@@ -14,19 +14,8 @@ export function defineRefund(store: Sequelize) {
         defaultValue: "",
         allowNull: false,
       },
-      reason: {
-        type: DataTypes.STRING,
-        defaultValue: "",
-        allowNull: false,
-      },
       status: {
-        type: DataTypes.ENUM(
-          "pending",
-          "completed",
-          "refunded",
-          "rejected",
-          "error"
-        ),
+        type: DataTypes.ENUM("pending", "completed", "refunded", "error"),
         defaultValue: "pending",
         allowNull: false,
       },
@@ -39,6 +28,7 @@ export function defineRefund(store: Sequelize) {
         type: DataTypes.DECIMAL(10, 2),
         defaultValue: 0.0,
         allowNull: false,
+        validate: { min: 0.0 },
       },
     },
     {
@@ -46,4 +36,4 @@ export function defineRefund(store: Sequelize) {
       // indexes: [{ fields: ["status"] }],
     }
   );
-}
+};

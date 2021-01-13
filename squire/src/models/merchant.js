@@ -1,6 +1,6 @@
-import { DataTypes, Sequelize } from "sequelize";
+const { DataTypes } = require("sequelize");
 
-export function defineMerchant(store: Sequelize) {
+module.exports = (store) => {
   store.define(
     "Merchant",
     {
@@ -24,4 +24,4 @@ export function defineMerchant(store: Sequelize) {
       // indexes: [{ fields: ["status"] }],
     }
   );
-}
+};

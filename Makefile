@@ -1,8 +1,9 @@
 run:
-	npx ts-node -r dotenv/config app/src/app.ts
+	clear; cd app && node -r dotenv/config src/app.js
+
+update:
+	npm install --prefix squire
+	rm -rf app/node_modules/squire && npm install --prefix app
 
 lib:
-	cd squire && npx ts-node -r dotenv/config src/index.ts
-
-build:
-	npm run build --prefix squire
+	cd squire && node -r dotenv/config src/index.js
