@@ -7,10 +7,13 @@ async function main() {
 
     merchant = await createMerchant(squire);
     // console.log(merchant.get());
+    // process.exit(0);
     barber = await createMerchantEmployee(squire, merchant.get("uuid"));
     // console.log(barber.get());
+    // process.exit(0);
     customer = await createUser(squire);
     // console.log(customer.get());
+    // process.exit(0);
 
     merchantAccount = await merchant.getAccount();
     barberAccount = await barber.getAccount();
@@ -18,22 +21,25 @@ async function main() {
     // console.log(merchantAccount.get());
     // console.log(barberAccount.get());
     // console.log(customerAccount.get());
+    // process.exit(0);
 
     await squire.createTransaction({
       type: "deposit",
       destinationAccountId: merchantAccount.get("uuid"),
       amount: 20,
     });
-    // merchantAccount = await merchant.getAccount();
+    merchantAccount = await merchant.getAccount();
     // console.log("merchant deposit", merchantAccount.get());
+    // process.exit(0);
 
     await squire.createTransaction({
       type: "withdrawal",
       sourceAccountId: merchantAccount.get("uuid"),
       amount: 10,
     });
-    // merchantAccount = await merchant.getAccount();
+    merchantAccount = await merchant.getAccount();
     // console.log("merchant withdrawal", merchantAccount.get());
+    // process.exit(0);
 
     await squire.createTransaction({
       type: "transfer",
@@ -44,8 +50,14 @@ async function main() {
 
     merchantAccount = await merchant.getAccount();
     barberAccount = await barber.getAccount();
+    merchantTransactions = await squire.getAccountTransactions(
+      merchantAccount.get("uuid")
+    );
     // console.log(merchantAccount.get());
     // console.log(barberAccount.get());
+    // process.exit(0);
+    // console.log(merchantTransactions);
+    // process.exit(0);
 
     // await squire.createTransaction({
     //   type: "transfer",
@@ -53,6 +65,7 @@ async function main() {
     //   destinationAccountId: barberAccount.get("uuid"),
     //   amount: 10,
     // });
+    // process.exit(0);
 
     await squire.createTransaction({
       type: "deposit",
@@ -60,11 +73,9 @@ async function main() {
       amount: 100,
     });
 
-    merchantTransactions = await squire.getAccountTransactions(
-      merchantAccount.get("uuid")
-    );
     customerAccount = await customer.getAccount();
-    console.log(customerAccount.get());
+    // console.log(customerAccount.get());
+    // process.exit(0);
 
     charge = await squire.chargeUser(
       customer.get("uuid"),
@@ -72,26 +83,31 @@ async function main() {
       20,
       4
     );
+    // console.log("charge", charge.get());
+    // process.exit(0);
 
     payment = await squire.createPayment(charge.get("uuid"));
-    // console.log("charge", charge.get());
     // console.log("payment", payment.get());
+    // process.exit(0);
+
     customerAccount = await customer.getAccount();
     merchantAccount = await merchant.getAccount();
     barberAccount = await barber.getAccount();
-    console.log("merchant paid", merchantAccount.get());
-    console.log("barber paid", barberAccount.get());
-    console.log("customer charged", customerAccount.get());
+    // console.log("merchant paid", merchantAccount.get());
+    // console.log("barber paid", barberAccount.get());
+    // console.log("customer charged", customerAccount.get());
+    // process.exit(0);
 
     refund = await squire.createRefund(payment.get("uuid"));
     customerAccount = await customer.getAccount();
     merchantAccount = await merchant.getAccount();
     barberAccount = await barber.getAccount();
 
-    console.log("refund", refund.get());
-    console.log("merchant refund", merchantAccount.get());
-    console.log("barber refund", barberAccount.get());
-    console.log("customer refund", customerAccount.get());
+    // console.log("refund", refund.get());
+    // console.log("merchant refund", merchantAccount.get());
+    // console.log("barber refund", barberAccount.get());
+    // console.log("customer refund", customerAccount.get());
+    // process.exit(0);
 
     merchantTransactions = await squire.getAccountTransactions(
       merchantAccount.get("uuid")
@@ -102,9 +118,10 @@ async function main() {
     customerTransactions = await squire.getAccountTransactions(
       customerAccount.get("uuid")
     );
-    console.log("merchant transactions", merchantTransactions);
-    console.log("barber transactions", barberTransactions);
-    console.log("customer transactions", customerTransactions);
+    // console.log("merchant transactions", merchantTransactions);
+    // console.log("barber transactions", barberTransactions);
+    // console.log("customer transactions", customerTransactions);
+    // process.exit(0);
 
     merchantPayments = await squire.listPayments({
       MerchantUuid: merchant.get("uuid"),
@@ -122,21 +139,20 @@ async function main() {
       CustomerUuid: customer.get("uuid"),
     });
 
-    console.log("merchant payments", merchantPayments);
-    console.log("customer payments", customerPayments);
+    // console.log("merchant payments", merchantPayments);
+    // console.log("customer payments", customerPayments);
+    // process.exit(0);
 
-    console.log("merchant refunds", merchantRefunds);
-    console.log("customer refunds", customerRefunds);
+    // console.log("merchant refunds", merchantRefunds);
+    // console.log("customer refunds", customerRefunds);
+    // process.exit(0);
 
     refundTransaction = await refund.getTransaction();
     paymentFromRefund = await refund.getPayment();
     originalTransaction = await paymentFromRefund.getTransaction();
-    console.log("refund transaction", refundTransaction);
-    console.log("original transaction", originalTransaction);
-
-    // user = await squire.getUser("772ed047-e956-4462-b4bf-ecab0dad520d");
-    // console.log(user);
-    process.exit(0);
+    // console.log("refund transaction", refundTransaction);
+    // console.log("original transaction", originalTransaction);
+    // process.exit(0);
   } catch (error) {
     console.log(error.message);
     process.exit(0);
@@ -180,5 +196,12 @@ async function createRandomUsers(squire, count) {
       },
       faker.name.findName()
     );
+  }
+}
+
+function checkError(value) {
+  // return typeof value === "undefined";
+  if (typeof value === "undefined") {
+    throw new Error("value is undefined");
   }
 }

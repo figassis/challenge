@@ -60,13 +60,6 @@ async function createTransaction(store, request) {
       throw new Error("invalid destination account");
     }
 
-    // sourceAccount = await store.models.Account.findOne({
-    //   where: { uuid: request.sourceAccountId },
-    // });
-    // destinationAccount = await store.models.Account.findOne({
-    //   where: { uuid: request.destinationAccountId },
-    // });
-
     if (request.type == "deposit") {
       let amount = request.amount;
       if (amount <= 0) {
@@ -139,6 +132,7 @@ async function createTransaction(store, request) {
       availableBalance = parseFloat(customerAccount.get("availableBalance"));
       balance = parseFloat(customerAccount.get("balance"));
       tipAmount = parseFloat(charge.get("tipAmount"));
+      // feeAmount = amount * fee;
       feeAmount = amount * fee;
 
       if (amount > availableBalance || amount > balance) {
@@ -485,20 +479,22 @@ async function commitTransaction(store, transactionID) {
     }
 
     if (transaction.get("type") === "deposit") {
-      return await deposit(store, destinationId, amount);
+      await deposit(store, destinationId, amount);
+      await store.models.Transaction.update(
+        { status: "completed" },
+        { where: { uuid: transactionID } }
+      );
+      return;
     }
 
     if (transaction.get("type") === "withdrawal") {
-      return await withdraw(store, sourceId, amount);
+      await withdraw(store, sourceId, amount);
+      await store.models.Transaction.update(
+        { status: "completed" },
+        { where: { uuid: transactionID } }
+      );
+      return;
     }
-
-    // if (transaction.get("type") !== "payment" &&   feeAmount <= 0) {
-    //   transaction = await store.models.Transaction.update(
-    //     { feeAmount: amount * fee },
-    //     { where: { uuid: transactionID } }
-    //   );
-    //   feeAmount = parseFloat(transaction.get("feeAmount"));
-    // }
 
     total = amount + feeAmount;
 

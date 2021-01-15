@@ -44,6 +44,7 @@ class Squire {
   constructor() {
     return (async () => {
       this.store = await initialize(process.env.RESET === "true");
+      // this.fee = parseFloat(process.env.FEE);
       return this;
     })();
   }
